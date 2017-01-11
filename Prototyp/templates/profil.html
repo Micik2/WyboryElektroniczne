@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+  <head>
+    <meta charset="UTF-8">
+    <title>Python Flask App</title>
+    
+  </head>
+ 
+  <body>
+      <div>
+        <form>
+            <h1>Profil dla wyborcy o numerze PESEL: {{pesel}}.</h1>
+                <tr>
+                  <td><h2>Podstawowe dane:</h2></td>
+                  <td>Imię: {{imie}}</td><br />
+                  <td>Nazwisko: {{nazwisko}}</td><br />
+                  <td>Numer dowodu: {{nr_dowodu}}</td><br />
+                </tr>
+                <tr>
+                  <td><h3>Dane adresowe:</h3></td>
+                  <td>Ulica: {{ulica}}</td><br />
+                  <td>Numer mieszkania/domu: {{nr_lokalu}}</td><br />
+                  <td>Kod pocztowy: {{kod_pocztowy}}</td><br />
+                  <td>Miejscowość: {{miejscowosc}}</td><br />
+                </tr>
+                <tr>
+                  <td><h4>Pozostałe dane:</h4></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                
+
+        </form>
+        <form action="/wybory">
+          <input type="submit" value="Przejdź do wyborów"/>
+        </form>
+
+
+                <!--<tr><label for="imie"><td>Imię: {{imie}}</td></label>
+                <label for="nazwisko"><td>Nazwisko: {{nazwisko}}</td></label>
+                <label for="nr_dowodu"><td>Numer dowodu: {{nr_dowodu}}</td></label></tr>
+                <h3>Adres</h3>
+                <tr><label for="ulica"><td>Ulica: {{ulica}}</td></label>
+                <label for="nr_lokalu"><td>Numer mieszkania/domu: {{nr_lokalu}}</td></label>
+                <label for="kod_pocztowy"><td>Kod pocztowy: {{kod_pocztowy}}</td></label>
+                <label for="miejscowosc"><td>Miejscowość: {{miejscowosc}}</td></label></tr>
+                <h4>Pozostałe dane</h4>
+                <tr><label for="wyksztalcenie"><td>Wykształcenie: {{wyksztalcenie}}</td></label>
+                <label for="kraj_pochodzenia"><td>Kraj pochodzenia: {{kraj_pochodzenia}}</td></label>
+                <label for="wiek"><td>Wiek: {{wiek}}</td></label>
+                <label for="nr_telefonu"><td>Numer telefonu: {{nr_telefonu}}</td></label></tr>-->
+      </div>
+  </body>
+</html>
