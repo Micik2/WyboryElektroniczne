@@ -86,9 +86,9 @@ def pokazLogowanie():
 
 @app.route("/pokazRejestracja/")
 def pokazRejestracja():
-    return render_template("rejestracja.html")    
+    return render_template("rejestracja.html")
 
-@app.route("/rejestracja", methods = ["POST", "GET"])  
+@app.route("/rejestracja", methods = ["POST", "GET"])
 def rejestracja():  
     _pesel = request.form["inputPesel"]
     _email = request.form["inputEmail"]
