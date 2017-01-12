@@ -13,7 +13,6 @@ app.config["DEBUG"] = True
 
 tas = Database()
 
-
 class Obywatele(tas.Entity):
     PESEL = PrimaryKey(str)
     email = Required(str, unique=True)
@@ -38,14 +37,6 @@ class Wyborcy(tas.Entity):
     nr_telefonu = Optional(int, unique=True)
     OBYWATELE_PESEL = PrimaryKey(Obywatele)
 
-'''
-class Obywatele(tas.Entity):
-    PESEL = PrimaryKey(str)
-    email = Required(str, unique=True)
-    haslo = Required(str, unique=True)
-    #haslo = Optional(str)
-'''
-
 #tas.bind("mysql", host = "localhost", user = "root", passwd = "localhost", db = "tas")
 tas.bind("sqlite", "database.sqlite", create_db=True)
 tas.generate_mapping(create_tables = True)  
@@ -56,14 +47,7 @@ def main():
         pesel = session["username"]
         return render_template("index.html", pesel = pesel)
     return render_template("index.html")
-'''
-@app.route("/wylistowanieWyborow")
-def wylistowanieWyborow():
-    lista_wyborow = []
-    lista_wyborow.append("Wybory na kanclerza")
-    lista_wyborow.append("Wybory na prezydenta")
-    return render_template("wybory.html", wyb = lista_wyborow, pesel = session["username"])
-'''
+
 @app.route("/wybory")
 def wybory():  
     if "username" in session:
@@ -115,7 +99,6 @@ def rejestracja():
         with db_session:
             Obywatele(PESEL = _pesel, email = _email, haslo = _haslo)
             commit()
-    #return json.dumps({"message": "Użytkownik stworzony pomyślnie."})
     return json.dumps("Użytkownik stworzony pomyślnie.").encode("utf8")
 
 @app.route("/logowanie", methods = ["POST"])
@@ -128,9 +111,6 @@ def logowanie():
 
     if _pesel and _haslo:
         with db_session:
-            #wynik = select(o for o in Obywatele if getattr(o, haslo) == _haslo)
-            #wynik = select(o for o in Obywatele if o.haslo == _haslo)[:]
-            #wynik = Obywatele.select(lambda o: o.haslo == _haslo)[:]
             wynik = Obywatele.get(PESEL = _pesel, haslo = _haslo)
     if wynik:
         session["username"] = wynik.PESEL
@@ -145,7 +125,6 @@ def logowanie():
         #                         nr_telefonu = pro.nr_telefonu)
     print "TO CIEKAWE"
     print session["username"]
-    #return render_template("profil.html", pesel = session["username"])
     return render_template("profil.html", pesel = session["username"], imie = "Jan", 
                             nazwisko = "Nowak", nr_dowodu = "ABC123456", 
                             ulica = "Testowa", nr_lokalu = "0", 
@@ -153,11 +132,6 @@ def logowanie():
                             wyksztalcenie = "Podstawowe", 
                             kraj_pochodzenia = "Polska", wiek = "20",
                             nr_telefonu = "123456789")
-    #return render_template("profil.html")
-    #return json.dumps({"message": "Użytkownik zalogowany pomyślnie."})
-    #return render_template("profil.html", imie=, nazwisko=,)
-    #return render_template("index.html")
-    #return redirect(url_for(haslo))
 '''
 @app.route("/logowanie/<obywatel>", methods = ["POST"])
 def logowanie(obywatel):
@@ -174,62 +148,12 @@ def logowanie(obywatel):
 
     #return redirect(url_for(haslo))
 
-
-
 @app.route("/profil/<obywatel>/", methods = ["GET", "POST"])
 def profil(obywatel):
     with db_session:
         wynik = select(o for o in Obywatele)
         wynik.PESEL 
 '''
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port = 5000)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""    
-@app.route('/login/', methods=["GET","POST"])
-def login_page():
-    error = ''
-    try:
-        c, conn = connection()
-        if request.method == "POST":
-
-            data = c.execute("SELECT * FROM users WHERE username = (%s)",
-                             thwart(request.form['username']))
-            
-            data = c.fetchone()[2]
-
-            if sha256_crypt.verify(request.form['password'], data):
-                session['logged_in'] = True
-                session['username'] = request.form['username']
-
-                flash("You are now logged in")
-                return redirect(url_for("dashboard"))
-
-            else:
-                error = "Invalid credentials, try again."
-
-        gc.collect()
-
-        return render_template("login.html", error=error)
-
-    except Exception as e:
-        #flash(e)
-        error = "Invalid credentials, try again."
-        return render_template("login.html", error = error)  
-"""
-		
