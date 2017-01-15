@@ -146,10 +146,10 @@ def edycjaProfilu():
 
     lata = dzisiaj.year - rok_urodzenia
     if miesiac_urodzenia > miesiac:
-        lata -= lata
+        lata -= 1
     elif miesiac_urodzenia == miesiac:
         if dzien_urodzenia > dzien:
-            lata -= lata
+            lata -= 1
 
     _imie = request.form["imie"]
     _nazwisko = request.form["nazwisko"]
