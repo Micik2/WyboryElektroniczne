@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+  <head>
+    <meta charset="UTF-8">
+    <title>Python Flask App</title>
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+
+    <link href="../static/signup.css" rel="stylesheet">
+
+    <script src="../static/js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        $('#btnUpdate').click(function() {
+     
+            $.ajax({
+                url: '/pokazEdycjaProfilu',
+                data: $('form').serialize(),
+                type: 'POST',
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+    </script>
+    
+  </head>
+ 
+  <body>
+      <div class="container">
+          <div class="header">
+            <nav>
+              <ul class="nav nav-pills pull-left">
+                <li role="presentation" class="active"><a href="javascript:history.back()">Wstecz</a>
+                </li>
+              </ul>
+              <ul class="nav nav-pills pull-right">
+                <li role="presentation" ><a href="/">Strona główna</a></li>
+                <li role="presentation"><a href="/pokazLogowanie">Zaloguj się</a></li>
+                <li role="presentation" class="active"><a href="#">Zarejestruj się</a></li>
+              </ul>
+            </nav>
+            <h3 class="text-muted"><center>Wybory elektroniczne</center></h3>
+          </div>
+
+          <div class="jumbotron">
+            <h1>Aplikacja Testowa</h1>
+            <h2>{{ wiadomosc }}</h2>
+            <form action="/edycjaProfilu" method="post" class="form-signin">
+                <label for="inputName" class="sr-only">Imię</label>
+                <input type="text" name="imie" placeholder="Imię" required autofocus class="form-control">
+                <label for="inputSurname" class="sr-only">Nazwisko</label>
+                <input type="text" name="nazwisko" placeholder="Nazwisko" class="form-control" required>
+                <label for="inputIDcard" class="sr-only">Dowód osobisty</label>
+                <input type="text" name="nr_dowodu" placeholder="Numer dowodu osobistego" class="form-control" required>
+                <label for="inputStreet" class="sr-only">Ulica</label>
+                <input type="text" name="ulica" placeholder="Ulica" class="form-control" required>
+                <label for="inputLocalNumber" class="sr-only">Mieszkanie/Dom</label>
+                <input type="text" name="nr_lokalu" placeholder="Numer lokalu" class="form-control" required>
+                <label for="inputPostalCode" class="sr-only">Kod pocztowy</label>
+                <input type="text" name="kod_pocztowy" placeholder="Kod pocztowy" class="form-control" required>
+                <label for="inputLocality" class="sr-only">Miejscowość</label>
+                <input type="text" name="miejscowosc" placeholder="Miejsce zameldowania" class="form-control" required>
+                <label for="inputEducation" class="sr-only">Wykształcenie</label>
+                <input type="text" name="wyksztalcenie" placeholder="Wykształcenie" class="form-control" required>
+                <label for="inputCountryOfOrigin" class="sr-only">Kraj pochodzenia</label>
+                <input type="text" name="kraj_pochodzenia" placeholder="Kraj pochodzenia" class="form-control" required>
+                <label for="inputPhoneNumber" class="sr-only">Nr telefonu</label>
+                <input type="tel" name="nr_telefonu" placeholder="Numer telefonu" class="form-control" required>
+
+                <h3><button id="btnUpdate" type="submit" class="btn btn-lg btn-primary btn-block">Potwierdź dane</button></h3>
+
+            </form>
+          </div>
+
+          <footer class="footer">
+            <p>&copy; UAM 2017</p>
+          </footer>
+
+      </div>
+  </body>
+</html>

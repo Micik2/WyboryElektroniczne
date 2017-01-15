@@ -7,6 +7,9 @@ from werkzeug import secure_filename
 from flask_images import *
 import os
 import sys
+import random
+import smtplib
+from datetime import date
 reload(sys)  
 sys.setdefaultencoding("utf8")
 
@@ -22,7 +25,8 @@ tas = Database()
 
 class Obywatele(tas.Entity):
     PESEL = PrimaryKey(str)
-    email = Required(str)
+    #email = Required(str)
+    email = Optional(str)
     haslo = Optional(str)
     wyborcy = Optional("Wyborcy")
     zdjecie = Required(unicode, default="default.jpg")
@@ -38,7 +42,7 @@ class Wyborcy(tas.Entity):
     wyksztalcenie = Optional(unicode)
     kraj_pochodzenia = Optional(str)
     wiek = Optional(int)
-    czy_ubezwlasnowolniony = Optional(bool)
+    czy_ubezwlasnowolniony = Optional(bool, default=0)
     #haslo_tymczasowe = Required(str)
     haslo_tymczasowe = Optional(str)
     nr_telefonu = Optional(int, unique=True)
@@ -124,20 +128,102 @@ def zmianaZdjecia():
         commit()
     return redirect("pokazProfil")
 
-@app.route("/edycjaProfilu")
+@app.route("/pokazEdycjaProfilu")
+def pokazEdycjaProfilu():
+    return render_template("edycjaProfilu.html", wiadomosc = "Uzupełnij swoje dane, aby mieć możliwość brania udziału w głosowaniach")
+
+@app.route("/edycjaProfilu", methods = ["POST", "GET"])
 def edycjaProfilu():
-    return render_template("edycjaProfilu.html")
+    dzisiaj = date.today()
+    rok = dzisiaj.year
+    miesiac = dzisiaj.month
+    dzien = dzisiaj.day
+
+    #Ze względu na to, że nie żyje żaden obywatel Polski urodzony w XVIII wieku, dodaję 1900
+    rok_urodzenia = 1900 + int(session["username"][:2])
+    miesiac_urodzenia = int(session["username"][2:4])
+    dzien_urodzenia = int(session["username"][4:6])
+
+    lata = dzisiaj.year - rok_urodzenia
+    if miesiac_urodzenia > miesiac:
+        lata -= lata
+    elif miesiac_urodzenia == miesiac:
+        if dzien_urodzenia > dzien:
+            lata -= lata
+
+    _imie = request.form["imie"]
+    _nazwisko = request.form["nazwisko"]
+    _nr_dowodu = request.form["nr_dowodu"]
+    _ulica = request.form["ulica"]
+    _nr_lokalu = request.form["nr_lokalu"]
+    _kod_pocztowy = request.form["kod_pocztowy"]
+    _miejscowosc = request.form["miejscowosc"]
+    _wyksztalcenie = request.form["wyksztalcenie"]
+    _kraj_pochodzenia = request.form["kraj_pochodzenia"]
+    _haslo_tymczasowe = session["password"]
+    _nr_telefonu = request.form["nr_telefonu"]
+    
+    with db_session:
+        #Wybory(imie = _imie, nazwisko = _nazwisko, nr_dowodu = _nr_dowodu, ulica = _ulica, 
+        #        nr_lokalu = _nr_lokalu, kod_pocztowy = _kod_pocztowy, 
+        #        miejscowosc = _miejscowosc, czy_glosowal = 0, wyksztalcenie = _wyksztalcenie,
+        #        kraj_pochodzenia = _kraj_pochodzenia, wiek = lata,
+        #        haslo_tymczasowe = session["password"], nr_telefonu = _nr_telefonu, )
+        Obywatele[session["username"]].imie = _imie
+        Obywatele[session["username"]].nazwisko = _nazwisko
+        Obywatele[session["username"]].nr_dowodu = _nr_dowodu
+        Obywatele[session["username"]].ulica = _ulica
+        Obywatele[session["username"]].nr_lokalu = _nr_lokalu
+        Obywatele[session["username"]].kod_pocztowy = _kod_pocztowy
+        Obywatele[session["username"]].miejscowosc = _miejscowosc
+        Obywatele[session["username"]].czy_glosowal = 0
+        Obywatele[session["username"]].wyksztalcenie = _wyksztalcenie
+        Obywatele[session["username"]].kraj_pochodzenia = _kraj_pochodzenia
+        Obywatele[session["username"]].wiek = lata
+        Obywatele[session["username"]].haslo_tymczasowe = session["password"]
+        Obywatele[session["username"]].nr_telefonu = _nr_telefonu
+        commit()
+    return redirect("pokazProfil")
 
 @app.route("/rejestracja", methods = ["POST", "GET"])  
 def rejestracja():  
     _pesel = request.form["inputPesel"]
     _email = request.form["inputEmail"]
-    _haslo = request.form["inputPassword"]
-    print "Wpisany PESEL: " + _pesel
+    #_haslo = request.form["inputPassword"]
+    haslo = random.getrandbits(128)
+    h = "%032x" % haslo
+    has = str(h)
 
-    if _pesel and _email and _haslo:
+    link = "127.0.0.1/pokazLogowanie"
+
+    wiadomosc = ["From: Wybory Elektroniczne", 
+            "To: micik220@gmail.com", 
+            "Subject: Rejestracja",
+            "",
+            "Do zalogowania się użyj podanego niżej hasła:",
+            has,
+            "Wchodząc w ten link:",
+            link]
+
+    msg = "\r\n".join(wiadomosc)
+
+    fromaddr = "wyboryelektroniczne@gmail.com"
+    toaddrs  = _email
+    username = "wyboryelektroniczne"
+    password = "blacktron"
+    server = smtplib.SMTP("smtp.gmail.com:587")
+    server.ehlo()
+    server.starttls()
+    server.login(username, password)
+    server.sendmail(fromaddr, toaddrs, msg)
+    server.quit()
+
+    #if _pesel and _email and _haslo:
+    if _pesel and _email:
         with db_session:
-            Obywatele(PESEL = _pesel, email = _email, haslo = _haslo)
+            #Obywatele(PESEL = _pesel, email = _email, haslo = _haslo)
+            Obywatele(PESEL = _pesel, email = _email, haslo = has)
+            #Wyborcy(OBYWATELE_PESEL = _pesel)
             commit()
     #return json.dumps({"message": "Użytkownik stworzony pomyślnie."})
     return json.dumps("Użytkownik stworzony pomyślnie.").encode("utf8")
@@ -155,6 +241,7 @@ def logowanie():
             wynik = Obywatele.get(PESEL = _pesel, haslo = _haslo)
     if wynik:
         session["username"] = wynik.PESEL
+        session["password"] = wynik.haslo
         with db_session:
             pro = Wyborcy.get(OBYWATELE_PESEL = wynik.PESEL)
         # return render_template("profil.html", pesel = wynik.PESEL, imie = pro.imie, 
@@ -165,7 +252,9 @@ def logowanie():
         #                         kraj_pochodzenia = pro.kraj_pochodzenia, wiek = pro.wiek,
         #                         nr_telefonu = pro.nr_telefonu)
         #return redirect("profil")
-        return redirect("pokazProfil")
+        if pro:
+            return redirect("pokazProfil")
+        return redirect("pokazEdycjaProfilu")
     else:
         return json.dumps({"message": "Błędne dane!"}).encode("utf8")
     '''return render_template("profil.html", pesel = session["username"], imie = "Jan", 
