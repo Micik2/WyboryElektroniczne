@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <title>Python Flask App</title>
     
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+
+    <link href="../static/signup.css" rel="stylesheet">
+
     <script src="../static/js/jquery-1.12.3.min.js"></script>
     <script type="text/javascript">
     $(function() {
@@ -27,18 +32,39 @@
   </head>
  
   <body>
-      <div>
-        <form action="/rejestracja" method="post">
-            <h1>Rejestracja</h1>
-                <label for="inputPesel">PESEL</label>
-                <input type="text" maxlength="11" name="inputPesel" placeholder="PESEL" required autofocus>
-                <label for="inputEmail">Email address</label>
-                <input type="email" name="inputEmail" placeholder="E-mail" required>
-                <label for="inputPassword">Password</label>
-                <input type="text" name="inputPassword" placeholder="Hasło" required>
-             
-            <h2><button id="btnRegister" type="submit">Potwierdź rejestrację</button></h2>
-        </form>
+      <div class="container">
+          <div class="header">
+            <nav>
+              <ul class="nav nav-pills pull-left">
+                <li role="presentation" class="active"><a href="javascript:history.back()">Wstecz</a>
+                </li>
+              </ul>
+              <ul class="nav nav-pills pull-right">
+                <li role="presentation" ><a href="/">Strona główna</a></li>
+                <li role="presentation"><a href="/pokazLogowanie">Zaloguj się</a></li>
+                <li role="presentation" class="active"><a href="#">Zarejestruj się</a></li>
+              </ul>
+            </nav>
+            <h3 class="text-muted"><center>Wybory elektroniczne</center></h3>
+          </div>
+
+          <div class="jumbotron">
+            <h1>Aplikacja Testowa</h1>
+            <form action="/rejestracja" method="post" class="form-signin">
+                <label for="inputPesel" class="sr-only">PESEL</label>
+                <input type="text" maxlength="11" name="inputPesel" placeholder="PESEL" required autofocus class="form-control">
+                <label for="inputEmail" class="sr-only">Email address</label>
+                <input type="email" name="inputEmail" placeholder="E-mail" class="form-control" required>
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="text" name="inputPassword" placeholder="Hasło" class="form-control" required>
+                <h2><button id="btnRegister" type="submit" class="btn btn-lg btn-primary btn-block">Potwierdź rejestrację</button></h2>
+            </form>
+          </div>
+
+          <footer class="footer">
+            <p>&copy; UAM 2017</p>
+          </footer>
+
       </div>
   </body>
 </html>

@@ -4,38 +4,69 @@
     <meta charset="UTF-8">
     <title>Python Flask App</title>
     
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+
+    <link href="../static/css/signup.css" rel="stylesheet">
+
   </head>
  
   <body>
-      <div>
-        <form>
-            <h1>Profil dla wyborcy o numerze PESEL: {{pesel}}.</h1>
-                <tr>
-                  <td><h2>Podstawowe dane:</h2></td>
-                  <td>Imię: {{imie}}</td><br />
-                  <td>Nazwisko: {{nazwisko}}</td><br />
-                  <td>Numer dowodu: {{nr_dowodu}}</td><br />
-                </tr>
-                <tr>
-                  <td><h3>Dane adresowe:</h3></td>
-                  <td>Ulica: {{ulica}}</td><br />
-                  <td>Numer mieszkania/domu: {{nr_lokalu}}</td><br />
-                  <td>Kod pocztowy: {{kod_pocztowy}}</td><br />
-                  <td>Miejscowość: {{miejscowosc}}</td><br />
-                </tr>
-                <tr>
-                  <td><h4>Pozostałe dane:</h4></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                
+      <div class="container">
 
-        </form>
-        <form action="/wybory">
-          <input type="submit" value="Przejdź do wyborów"/>
-        </form>
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-left">
+                    <li role="presentation" class="active"><a href="javascript:history.back()">Wstecz</a>
+                    </li>
+                </ul>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class="active"><a href="/">Wyloguj</a>
+                    </li>
+                </ul>
+            </nav>
+            <h3 class="text-muted"><center>Zalogowano jako: {{ pesel }}</center></h3>
+            <!--<h4 class="text-muted"><center>{{ pesel }}</center></h4>-->
+        </div>
+
+        <div class="jumbotron">
+          <img src="{{ img_url }}" width="340" height="340"/>
+          <form>
+              <!--<h1>Profil dla wyborcy o numerze PESEL: {{pesel}}.</h1>-->
+              </br>  
+                  <ol>
+                    <h2>Podstawowe dane:</h2>
+                    <li>Imię: {{imie}}</li><br />
+                    <li>Nazwisko: {{nazwisko}}</li><br />
+                    <li>Numer dowodu: {{nr_dowodu}}</li><br />
+                  </ol>
+                  <ol>
+                    <h3>Dane adresowe:</h3>
+                    <li>Ulica: {{ulica}}</li><br />
+                    <li>Numer mieszkania/domu: {{nr_lokalu}}</li><br />
+                    <li>Kod pocztowy: {{kod_pocztowy}}</li><br />
+                    <li>Miejscowość: {{miejscowosc}}</li><br />
+                  </ol>
+                  <ol>
+                    <h4>Pozostałe dane:</h4>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                  </ol>
+           
+          </br>
+          </form>
+          <!--<form action="/zmianaZdjecia" method="post" enctype="multipart/form-data">-->
+          <form action="/zmianaZdjecia" method="post" enctype="multipart/form-data" class="form-signin">
+            <input type="file" name = "zdjecie" class="form-control"/>
+            </br>
+            <input type="submit" value="Dodaj swoje zdjęcie" class="btn btn-lg btn-primary btn-block"/>
+          </form>
+          </br>
+          <form action="/wybory" class="form-signin">
+            <input type="submit" value="Przejdź do wyborów" class="btn btn-lg btn-primary btn-block"/>
+          </form>
 
 
                 <!--<tr><label for="imie"><td>Imię: {{imie}}</td></label>
@@ -51,6 +82,12 @@
                 <label for="kraj_pochodzenia"><td>Kraj pochodzenia: {{kraj_pochodzenia}}</td></label>
                 <label for="wiek"><td>Wiek: {{wiek}}</td></label>
                 <label for="nr_telefonu"><td>Numer telefonu: {{nr_telefonu}}</td></label></tr>-->
+        </div>
+
+        <footer class="footer">
+            <p>&copy; UAM 2017</p>
+        </footer>
+
       </div>
   </body>
 </html>

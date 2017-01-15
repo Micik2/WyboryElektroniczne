@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+  <head>
+    <meta charset="UTF-8">
+    <title>Python Flask App</title>
+    
+  </head>
+ 
+  <body>
+      <div>
+        <img src="{{ img_url }}" width="340" height="340"/>
+        <form>
+            <h1>Profil dla wyborcy o numerze PESEL: {{pesel}}.</h1>
+            </br>  
+                <ol>
+                  <h2>Podstawowe dane:</h2>
+                  <li>Imię: {{imie}}</li><br />
+                  <li>Nazwisko: {{nazwisko}}</li><br />
+                  <li>Numer dowodu: {{nr_dowodu}}</li><br />
+                </ol>
+                <ol>
+                  <h3>Dane adresowe:</h3>
+                  <li>Ulica: {{ulica}}</li><br />
+                  <li>Numer mieszkania/domu: {{nr_lokalu}}</li><br />
+                  <li>Kod pocztowy: {{kod_pocztowy}}</li><br />
+                  <li>Miejscowość: {{miejscowosc}}</li><br />
+                </ol>
+                <ol>
+                  <h4>Pozostałe dane:</h4>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                </ol>
+           
+        </br>
+        </form>
+        <!--<form action="/zmianaZdjecia" method="post" enctype="multipart/form-data">-->
+        <form action="/zmianaZdjecia" method="post" enctype="multipart/form-data">
+          <input type="file" name = "zdjecie"/>
+          <input type="submit" value="Dodaj swoje zdjęcie"/>
+        </form>
+        </br>
+        <form action="/wybory">
+          <input type="submit" value="Przejdź do wyborów"/>
+        </form>
+
+
+                <!--<tr><label for="imie"><td>Imię: {{imie}}</td></label>
+                <label for="nazwisko"><td>Nazwisko: {{nazwisko}}</td></label>
+                <label for="nr_dowodu"><td>Numer dowodu: {{nr_dowodu}}</td></label></tr>
+                <h3>Adres</h3>
+                <tr><label for="ulica"><td>Ulica: {{ulica}}</td></label>
+                <label for="nr_lokalu"><td>Numer mieszkania/domu: {{nr_lokalu}}</td></label>
+                <label for="kod_pocztowy"><td>Kod pocztowy: {{kod_pocztowy}}</td></label>
+                <label for="miejscowosc"><td>Miejscowość: {{miejscowosc}}</td></label></tr>
+                <h4>Pozostałe dane</h4>
+                <tr><label for="wyksztalcenie"><td>Wykształcenie: {{wyksztalcenie}}</td></label>
+                <label for="kraj_pochodzenia"><td>Kraj pochodzenia: {{kraj_pochodzenia}}</td></label>
+                <label for="wiek"><td>Wiek: {{wiek}}</td></label>
+                <label for="nr_telefonu"><td>Numer telefonu: {{nr_telefonu}}</td></label></tr>-->
+      </div>
+  </body>
+</html>
