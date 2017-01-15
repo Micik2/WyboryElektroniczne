@@ -109,12 +109,19 @@ def pokazProfil():
         obywatel = Obywatele.get(PESEL = session["username"])
         wyborca = Wyborcy.get(OBYWATELE_PESEL = session["username"])
         img_url = url_for("static", filename = obywatel.zdjecie)
-    if obywatel:
-        return render_template("profil.html", pesel = session["username"], imie = "Jan", 
-                                            nazwisko = "Nowak", img_url = img_url)
-    else:
+        if obywatel:
+            return render_template("profil.html", pesel = session["username"], 
+                imie = wyborca.imie, nazwisko = wyborca.nazwisko, nr_dowodu = wyborca.nr_dowodu,
+                ulica = wyborca.ulica, nr_lokalu = wyborca.nr_lokalu, 
+                kod_pocztowy = wyborca.kod_pocztowy, miejscowosc = wyborca.miejscowosc,
+                wyksztalcenie = wyborca.wyksztalcenie, 
+                kraj_pochodzenia = wyborca.kraj_pochodzenia, wiek = wyborca.wiek, 
+                nr_telefonu = wyborca.nr_telefonu, img_url = img_url)
+        #return render_template("profil.html", pesel = session["username"], imie = "Jan", 
+        #                                    nazwisko = "Nowak", img_url = img_url)
+        else:
         #return redirect("edycjaProfilu")
-        return redirect("main")
+            return redirect("main")
 
 @app.route("/zmianaZdjecia", methods = ["POST", "GET"])
 def zmianaZdjecia():
@@ -169,19 +176,21 @@ def edycjaProfilu():
         #        miejscowosc = _miejscowosc, czy_glosowal = 0, wyksztalcenie = _wyksztalcenie,
         #        kraj_pochodzenia = _kraj_pochodzenia, wiek = lata,
         #        haslo_tymczasowe = session["password"], nr_telefonu = _nr_telefonu, )
-        Obywatele[session["username"]].imie = _imie
-        Obywatele[session["username"]].nazwisko = _nazwisko
-        Obywatele[session["username"]].nr_dowodu = _nr_dowodu
-        Obywatele[session["username"]].ulica = _ulica
-        Obywatele[session["username"]].nr_lokalu = _nr_lokalu
-        Obywatele[session["username"]].kod_pocztowy = _kod_pocztowy
-        Obywatele[session["username"]].miejscowosc = _miejscowosc
-        Obywatele[session["username"]].czy_glosowal = 0
-        Obywatele[session["username"]].wyksztalcenie = _wyksztalcenie
-        Obywatele[session["username"]].kraj_pochodzenia = _kraj_pochodzenia
-        Obywatele[session["username"]].wiek = lata
-        Obywatele[session["username"]].haslo_tymczasowe = session["password"]
-        Obywatele[session["username"]].nr_telefonu = _nr_telefonu
+        obywatel = Obywatele.get(PESEL = session["username"])
+        img_url = url_for("static", filename = obywatel.zdjecie)
+        Wyborcy[session["username"]].imie = _imie
+        Wyborcy[session["username"]].nazwisko = _nazwisko
+        Wyborcy[session["username"]].nr_dowodu = _nr_dowodu
+        Wyborcy[session["username"]].ulica = _ulica
+        Wyborcy[session["username"]].nr_lokalu = _nr_lokalu
+        Wyborcy[session["username"]].kod_pocztowy = _kod_pocztowy
+        Wyborcy[session["username"]].miejscowosc = _miejscowosc
+        Wyborcy[session["username"]].czy_glosowal = 0
+        Wyborcy[session["username"]].wyksztalcenie = _wyksztalcenie
+        Wyborcy[session["username"]].kraj_pochodzenia = _kraj_pochodzenia
+        Wyborcy[session["username"]].wiek = lata
+        Wyborcy[session["username"]].haslo_tymczasowe = session["password"]
+        Wyborcy[session["username"]].nr_telefonu = _nr_telefonu
         commit()
     return redirect("pokazProfil")
 
@@ -194,7 +203,7 @@ def rejestracja():
     h = "%032x" % haslo
     has = str(h)
 
-    link = "127.0.0.1/pokazLogowanie"
+    link = "127.0.0.1:5000/pokazLogowanie"
 
     wiadomosc = ["From: Wybory Elektroniczne", 
             "To: micik220@gmail.com", 
@@ -209,7 +218,7 @@ def rejestracja():
 
     fromaddr = "wyboryelektroniczne@gmail.com"
     toaddrs  = _email
-    username = "wyboryelektroniczne"
+    username = "wyboryelektroniczne@gmail.com"
     password = "blacktron"
     server = smtplib.SMTP("smtp.gmail.com:587")
     server.ehlo()
@@ -223,6 +232,7 @@ def rejestracja():
         with db_session:
             #Obywatele(PESEL = _pesel, email = _email, haslo = _haslo)
             Obywatele(PESEL = _pesel, email = _email, haslo = has)
+            Wyborcy(OBYWATELE_PESEL = _pesel)
             #Wyborcy(OBYWATELE_PESEL = _pesel)
             commit()
     #return json.dumps({"message": "Użytkownik stworzony pomyślnie."})
@@ -252,11 +262,12 @@ def logowanie():
         #                         kraj_pochodzenia = pro.kraj_pochodzenia, wiek = pro.wiek,
         #                         nr_telefonu = pro.nr_telefonu)
         #return redirect("profil")
-        if pro:
-            return redirect("pokazProfil")
-        return redirect("pokazEdycjaProfilu")
+            if pro.imie:
+                return redirect("pokazProfil")
+            return redirect("pokazEdycjaProfilu")
     else:
-        return json.dumps({"message": "Błędne dane!"}).encode("utf8")
+        return render_template("error.html", error = "Błędne dane!")
+        #return json.dumps({"message": "Błędne dane!"}).encode("utf8")
     '''return render_template("profil.html", pesel = session["username"], imie = "Jan", 
                             nazwisko = "Nowak", nr_dowodu = "ABC123456", 
                             ulica = "Testowa", nr_lokalu = "0", 

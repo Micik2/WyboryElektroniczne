@@ -223,7 +223,7 @@ def userHome():
     if session.get('user'):        
         return render_template('userHome.html')
     else:
-        return render_template('error.html',error = 'Nieautoryzowany dostep!')
+        return render_template('error.html', error = 'Nieautoryzowany dostep!')
     return render_template('userHome.html')
         
 if __name__ == "__main__":
