@@ -21,7 +21,6 @@ images = Images(app)
 
 tas = Database()
 
-
 class Obywatele(tas.Entity):
     PESEL = PrimaryKey(str)
     email = Required(str)
@@ -47,14 +46,6 @@ class Wyborcy(tas.Entity):
     nr_telefonu = Optional(int, unique=True)
     OBYWATELE_PESEL = PrimaryKey(Obywatele)
 
-'''
-class Obywatele(tas.Entity):
-    PESEL = PrimaryKey(str)
-    email = Required(str, unique=True)
-    haslo = Required(str, unique=True)
-    #haslo = Optional(str)
-'''
-
 #tas.bind("mysql", host = "localhost", user = "root", passwd = "localhost", db = "tas")
 tas.bind("sqlite", "database2.sqlite", create_db=True)
 tas.generate_mapping(create_tables=True)  
@@ -68,14 +59,7 @@ def main():
         pesel = session["username"]
         return render_template("index.html", pesel = pesel)
     return render_template("index.html")
-'''
-@app.route("/wylistowanieWyborow")
-def wylistowanieWyborow():
-    lista_wyborow = []
-    lista_wyborow.append("Wybory na kanclerza")
-    lista_wyborow.append("Wybory na prezydenta")
-    return render_template("wybory.html", wyb = lista_wyborow, pesel = session["username"])
-'''
+
 @app.route("/wybory")
 def wybory():  
     if "username" in session:
@@ -155,8 +139,9 @@ def pokazLogowanie():
 
 @app.route("/pokazRejestracja/")
 def pokazRejestracja():
-    return render_template("rejestracja.html")    
+    return render_template("rejestracja.html")
 
+<<<<<<< HEAD
 #AKTUALNA FUNKCJA NA DOLE
 @app.route("/pokazProfil", methods = ["POST", "GET"]) 
 def pokazProfil():
@@ -229,6 +214,9 @@ def edycjaProfilu():
     return render_template("edycjaProfilu.html")
 
 @app.route("/rejestracja", methods = ["POST", "GET"])  
+=======
+@app.route("/rejestracja", methods = ["POST", "GET"])
+>>>>>>> cf6e52503a4929b2347a5da4d78524ff5be4a4c3
 def rejestracja():  
     _pesel = request.form["inputPesel"]
     _email = request.form["inputEmail"]
@@ -239,7 +227,6 @@ def rejestracja():
         with db_session:
             Obywatele(PESEL = _pesel, email = _email, haslo = _haslo)
             commit()
-    #return json.dumps({"message": "Użytkownik stworzony pomyślnie."})
     return json.dumps("Użytkownik stworzony pomyślnie.").encode("utf8")
 '''
 @app.route("/profil", methods = ["GET", "POST"])
@@ -298,6 +285,7 @@ def logowanie():
         #                         wyksztalcenie = pro.wyksztalcenie, 
         #                         kraj_pochodzenia = pro.kraj_pochodzenia, wiek = pro.wiek,
         #                         nr_telefonu = pro.nr_telefonu)
+<<<<<<< HEAD
         #return redirect("profil")
         return redirect("pokazProfil")
     else:
@@ -308,11 +296,17 @@ def logowanie():
     #return render_template("profil.html", pesel = session["username"])
     #return redirect("profil")
     '''return render_template("profil.html", pesel = session["username"], imie = "Jan", 
+=======
+    print "TO CIEKAWE"
+    print session["username"]
+    return render_template("profil.html", pesel = session["username"], imie = "Jan", 
+>>>>>>> cf6e52503a4929b2347a5da4d78524ff5be4a4c3
                             nazwisko = "Nowak", nr_dowodu = "ABC123456", 
                             ulica = "Testowa", nr_lokalu = "0", 
                             kod_pocztowy = "12-345", miejscowosc = "ąćęłńóśżź", 
                             wyksztalcenie = "Podstawowe", 
                             kraj_pochodzenia = "Polska", wiek = "20",
+<<<<<<< HEAD
                             nr_telefonu = "123456789")'''
     #return render_template("profil.html")
     #return json.dumps({"message": "Użytkownik zalogowany pomyślnie."})
@@ -321,6 +315,9 @@ def logowanie():
     #return redirect(url_for(haslo))
 
 
+=======
+                            nr_telefonu = "123456789")
+>>>>>>> cf6e52503a4929b2347a5da4d78524ff5be4a4c3
 '''
 @app.route("/logowanie/<obywatel>", methods = ["POST"])
 def logowanie(obywatel):
@@ -337,62 +334,12 @@ def logowanie(obywatel):
 
     #return redirect(url_for(haslo))
 
-
-
 @app.route("/profil/<obywatel>/", methods = ["GET", "POST"])
 def profil(obywatel):
     with db_session:
         wynik = select(o for o in Obywatele)
         wynik.PESEL 
 '''
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port = 5000)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""    
-@app.route('/login/', methods=["GET","POST"])
-def login_page():
-    error = ''
-    try:
-        c, conn = connection()
-        if request.method == "POST":
-
-            data = c.execute("SELECT * FROM users WHERE username = (%s)",
-                             thwart(request.form['username']))
-            
-            data = c.fetchone()[2]
-
-            if sha256_crypt.verify(request.form['password'], data):
-                session['logged_in'] = True
-                session['username'] = request.form['username']
-
-                flash("You are now logged in")
-                return redirect(url_for("dashboard"))
-
-            else:
-                error = "Invalid credentials, try again."
-
-        gc.collect()
-
-        return render_template("login.html", error=error)
-
-    except Exception as e:
-        #flash(e)
-        error = "Invalid credentials, try again."
-        return render_template("login.html", error = error)  
-"""
-		
